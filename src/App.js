@@ -1,24 +1,26 @@
-import logo from './logo.svg';
+import axios from 'axios';
+import { useEffect,useState } from 'react';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const [array, setArray] = useState([]);
+  const [error, setError] = useState("");
+  useEffect(()=>{
+    axios.get("https://dummyjson.com/posts")
+    .then((data)=>{
+      return setArray(data.data.posts);
+    }).catch((error)=>setError(error.message));
+  })
+  return (<>
+  <div className="container">
+    {array===[]?<h2>{error}</h2>:array.map((data)=>{
+      return <div className="datacontainer" key={data.id}>
+        <div className="title">{data.title}</div>
+        <div className="body">{data.body}</div>
+      </div>
+    })}
+  </div>
+  </>
   );
 }
 
